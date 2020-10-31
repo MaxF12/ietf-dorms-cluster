@@ -1,0 +1,27 @@
+{
+  "ietf-dorms:metadata":{
+    "sender":[
+      {
+        "source-address":"23.185.212.4",
+        "group":[
+          {
+            "group-address":"232.1.1.1",
+            "udp-stream":[
+              {
+                "port":"5001"
+              }
+            ]
+          },
+          {
+            "group-address":"232.10.10.1",
+            "udp-stream":[
+              {
+                "port":"12001"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
