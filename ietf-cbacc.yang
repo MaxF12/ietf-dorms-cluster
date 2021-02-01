@@ -41,14 +41,14 @@ module ietf-cbacc {
      metadata for SSM channels, as an extension to DORMS
      (draft-jholland-mboned-dorms).";
 
-    revision 2019-09-26 {
+    revision 2021-01-15 {
         description "Initial revision as an extension.";
         reference
           "";
     }
 
     augment
-      "/dorms:metadata/dorms:sender/dorms:group/dorms:udp-stream" {
+      "/dorms:metadata/dorms:sender/dorms:group" {
         description "Definition of the manifest stream providing
             integrity info for the data stream";
 

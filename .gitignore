@@ -3,6 +3,7 @@
 *.html
 *.pdf
 *.upload
+*.xml
 .tags
 *~
 *.sw?

@@ -1,8 +1,8 @@
 ---
 title: Circuit Breaker Assisted Congestion Control
 abbrev: CBACC
-docname: draft-ietf-mboned-cbacc-01
-date: 2020-10-30
+docname: draft-ietf-mboned-cbacc-02
+date: 2021-02-01
 category: std
 
 ipr: trust200902
@@ -277,7 +277,7 @@ In these cases, the sender may need to ensure that data channels are only availa
 
 When comparing flows between senders, (S,G)s from the same sender with different priorities should be treated as aggregated (S,G)s with regard to their declared bitrate consumption, to ensure that if any flows from the same sender need to be pruned by the circuit-breaker, the least preferred priority flows from that sender are pruned first.
 
-Between-sender flows and flows from the same sender with the same priority are ordered according to the fairness function.
+Between-sender flows and flows from the same sender with the same priority are ordered according to the fairness function.  TBD: need to work thru detsils, this does not work as written.  Sample fairness function would reward senders for splitting a flow in 2 (more total subscribers).  Maybe should count offload instead?  This has trouble from favoring padding in your flow, but is (i think?) dominated by subscriber count where that's known.
 The fairness function can be different for CBs in different contexts.
 
 A CBACC CB implementation SHOULD provide mechanisms for administrative controls to configure explicit biases, as this may be necessary to support Service Level Agreements for specific events or providers, or to block or de-prioritize channels with historically known misbehavior.
