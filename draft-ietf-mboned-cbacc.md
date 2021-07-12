@@ -1,8 +1,8 @@
 ---
 title: Circuit Breaker Assisted Congestion Control
 abbrev: CBACC
-docname: draft-ietf-mboned-cbacc-02
-date: 2021-02-01
+docname: draft-ietf-mboned-cbacc-03
+date: 2021-07-10
 category: std
 
 ipr: trust200902
@@ -30,8 +30,8 @@ normative:
   RFC8085:
   RFC8174:
   RFC8340:
-  I-D.draft-ietf-mboned-dorms-00:
-  I-D.draft-ietf-mboned-ambi-00:
+  I-D.draft-ietf-mboned-dorms:
+  I-D.draft-ietf-mboned-ambi:
 
 informative:
   RFC3688:
@@ -61,6 +61,22 @@ informative:
       -
         org: SLAC/SCS-Network Monitoring, Stanford University
     date: 2003
+  CapProbe:
+    title: "CapProbe: A Simple and Accurate Capacity Estimation Technique"
+    author:
+      -
+        name: Rohit Kapoor
+      -
+        name: Ling-Jyh Chen
+      -
+        name: Li Lao
+      -
+        name: Mario Gerla
+      -
+        name: M. Y. Sanadidi
+    format:
+      PDF: https://dl.acm.org/doi/pdf/10.1145/1015467.1015476
+    date: September 2004
   FLID-DL:
     target: https://ieeexplore.ieee.org/document/1038584
     title: "FLID-DL: congestion control for layered multicast"
@@ -126,6 +142,17 @@ informative:
     format:
       PDF: http://www.cs.bu.edu/techreports/pdf/2002-025-smcc.pdf
     date: 2002
+  ZSC91:
+    title: "Observations and Dynamics of a Congestion Control Algorithm: The Effects of Two-Way Traffic"
+    author:
+      -
+        name: Lixia Zhang
+      -
+        name: Scott Shenker
+      -
+        name: David D. Clark
+    seriesinfo: "Proc. ACM SIGCOMM, ACM Computer Communications Review (CCR), Vol 21, No 4, pp.133-147."
+    date: 1991
 
 --- abstract
 
@@ -142,7 +169,7 @@ CBACC defines a Network Transport Circuit Breaker (CB), as described by {{RFC808
 
 The CB behavior defined in this document uses bit-rate metadata about multicast data streams coupled with policy, capacity, and load information at a network location to prune multicast channels so that the network's aggregate capacity at that location is not exceeded by the subscribed channels.
 
-To communicate the required metadata, this document defines a YANG {{RFC7950}} module that augments the DORMS {{I-D.draft-ietf-mboned-dorms-00}} YANG module.
+To communicate the required metadata, this document defines a YANG {{RFC7950}} module that augments the DORMS {{I-D.draft-ietf-mboned-dorms}} YANG module.
 DORMS provides a mechanism for senders to publish metadata about the multicast streams they're sending through a RESTCONF service, so that receivers or forwarding nodes can discover and consume the metadata with a set of standard methods.
 The CBACC metadata MAY be communicated to receivers or forwarding nodes by some other method, but the definition of any alternative methods is out of scope for this document.
 
@@ -190,6 +217,10 @@ Substantial discussion of this document should take place on the MBONED working 
 
  * Another TBD: consider Dino's suggestion from 2020-04-09 to include an operational considerations section that addresses some possible optimizations for CB placement and configuration.
 
+ * TBD: add a section walking through the requirements in <https://datatracker.ietf.org/doc/html/rfc8084#section-4> and explaining how this matches.
+
+ * I'm unclear on whether <https://datatracker.ietf.org/doc/html/rfc8407#section-3.8.2> applies here, such that providing an augmentation inside the DORMS namespace causes an update to the DORMS document.
+
 # Circuit Breaker Behavior
 
 ## Functional Components
@@ -198,13 +229,14 @@ This section maps the functional components described in Section 3.1 of {{RFC808
 
 ### Bitrate Advertisement {#bit-ad}
 
-The metadata provides an advertised maximum data bit-rate, namely the "max-bits-per-second" field in the YANG model in {{ref-yang}}.
-This is a self-report by the sender about the maximum amount of traffic a sender will send within the interval given by the "data-rate-window" field, which is the measurement interval.
+The metadata provides an advertised maximum data bit-rate, namely the "max-speed" field in the YANG model in {{ref-yang}}.
+This is a self-report by the sender about the maximum amount of traffic a sender will send within any time interval given by the "data-rate-window" field, which is the measurement interval for the CB.
+This value refers to the total IP Payload data for all packets in the same (S,G), and its units are in kilobits per second.
 
-The sender MUST NOT send more data for a data stream than the amount of data declared according to its advertised data rate within any measurement window, and it's RECOMMENDED for the sender to provide some margin to account for forwarding bursts.
-If a CB node observes a higher data rate within any measurement window, it MAY circuit-break that flow immediately.
+The sender MUST NOT send more data for a data stream than the amount of data declared according to its advertised data rate within any measurement window, and it's RECOMMENDED for the sender to provide some margin to account for the possibility of burst forwarding after traffic encounters a non-empty queue, e.g. as sometimes observed with ACK compression (see {{ZSC91}} for a description of the phenomenon).
+If a CB node observes a higher data rate transmitted within any measurement window, it MAY circuit-break that flow immediately.
 
-In the terminology of {{RFC8084}}, this qualifies as an ingress meter.
+In the terminology of {{RFC8084}}, the bitrate advertisement qualifies as an ingress meter.
 
 ### Circuit Breaker Node {#cb-node}
 
@@ -224,7 +256,7 @@ The CB node has access to several pieces of information that can be used as rele
  5. The observed received data rates of competing non-multicast traffic.
 
  6. The loss rate for subscribed multicast channels, when available.
-    The loss rate is only sometimes observable at a CB node; for example, when using AMBI {{I-D.draft-ietf-mboned-ambi-00}}, or when the data stream carries a protocol that is known to the CB node by some out of band means, and whose traffic can be monitored for loss.
+    The loss rate is only sometimes observable at a CB node; for example, when using AMBI {{I-D.draft-ietf-mboned-ambi}}, or when the data stream carries a protocol that is known to the CB node by some out of band means, and whose traffic can be monitored for loss.
     When available, the loss rates may be used.
 
 Note that any on-path router can behave as a CB node, even though there may be other CB nodes downstream or upstream covering the same data streams.
@@ -238,7 +270,7 @@ Also note that other kinds of components besides on-path routers forwarding the 
 CBACC generally operates at a CB node, where metrics such as those described in {{cb-node}} are available through system calls, or by communication with various locally deployable system monitoring applications.
 However, the CBACC processing can equivalently occur on a separate device that can monitor statistics gathered at a CB node, as long as the necessary control functions to trigger the CB can be invoked.
 
-The communication path defined in this document for the CB node to obtain the bitrate advertisement in {{bit-ad}} is the use of DORMS {{I-D.draft-ietf-mboned-dorms-00}}.
+The communication path defined in this document for the CB node to obtain the bitrate advertisement in {{bit-ad}} is the use of DORMS {{I-D.draft-ietf-mboned-dorms}}.
 Other methods MAY be used as well or instead, but are out of scope for this document.
 
 ### Measurement Function
@@ -246,13 +278,13 @@ Other methods MAY be used as well or instead, but are out of scope for this docu
 The measurement function maintains a few values for each interface, computed from the metrics described in {{cb-node}} and {{bit-ad}}:
 
  1. The aggregate advertised maximum bit-rate capacity consumed by CBACC data streams.
-    This is the sum of the max-bit-rate values in the CBACC metadata for all data streams subscribed through an interface
+    This is the sum of the max-speed values in the CBACC metadata for all data streams subscribed through an interface
 
  2. An oversubscription threshold for each interface.
     The oversubscription threshold will be determined differently for CB nodes in different contexts.
     In some network devices, it might be as simple as an administratively configured absolute value or proportion of an interface's capacity.
     For other situations, like a CB node operating in a context with loss visibility, it could be a dynamically changing value that grows when data streams are successfully subscribed and receiving data without loss, and shrinks as loss is observed across subscribed data streams.
-    The oversubscription threshold calculation could also incorporate other information like out-of-band path capacity measurements with {{PathChirp}}, if available.
+    The oversubscription threshold calculation could also incorporate other information like out-of-band path capacity measurements with bandwidth detection techniques such as {{PathChirp}} or {{CapProbe}}.
 
     This document covers some non-normative examples of valid oversubscription threshold functions in {{ref-oversubscribe-thresh}}.
 In general, the oversubscription threshold is the primary parameter that different CBs in different contexts can tune to provide the safety guarantees necessary for their context.
@@ -270,7 +302,7 @@ When flows are blocked, they're blocked in order until the aggregate bitrate of 
 
 Flows from a single sender MUST be ordered according to their priority field from the CBACC metadata when compared with each other.  This takes precedence over the fairness function ordering, since certain flows from the same sender may need strict priority over others.
 
-For example, consider a sender using File Delivery over Unidirectional Transport (FLUTE, defined in {{RFC6726}}) that sends File Delivery Table Instances (see section 3.2 of {{RFC6726}}) in one (S,G) and data for the various referenced files in other (S,G)s.
+For example, consider a sender using File Delivery over Unidirectional Transport (FLUTE, defined in {{RFC6726}}) that sends File Delivery Table (FDT) Instances (see section 3.2 of {{RFC6726}}) in one (S,G) and data for the various referenced files in other (S,G)s.
 In this case the data for the files will not be consumable without the (S,G) containing the FDT.
 Other transport protocols may similarly send control information (often with a lower bitrate) on one channel, and data information on another.
 In these cases, the sender may need to ensure that data channels are only available when the control channels are also available.
@@ -405,6 +437,8 @@ This document adds the following registration to the "ns" subregistry of the "IE
 
 # Security Considerations
 
+TBD: Yang Doctor review from Reshad said this should "mention the YANG data nodes".  I think this means "do what https://tools.ietf.org/html/rfc8407#section-3.7 says"?
+
 ## Metadata Security
 
 Be sure to authenticate the metadata.
@@ -423,7 +457,7 @@ It is RECOMMENDED that network operators implement measures to mitigate such att
 
 # Acknowledgements
 
-Many thanks to Devin Anderson, Ben Kaduk, Cheng Jin, Scott Brown, Miroslav Ponec, Bob Briscoe, Lenny Giuliani, Christian Worm Mortensen, and Dino Farinacci for their thoughtful comments and contributions.
+Many thanks to Devin Anderson, Ben Kaduk, Cheng Jin, Scott Brown, Miroslav Ponec, Bob Briscoe, Lenny Giuliani, Christian Worm Mortensen, Dino Farinacci, and Reshad Rahman for their thoughtful comments and contributions.
 
 --- back
 
