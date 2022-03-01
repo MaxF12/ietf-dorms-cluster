@@ -116,7 +116,7 @@ The "Introduction" sections of the documents describing TESLA {{RFC4082}}, and T
  * Asymmetric per-packet signatures can handle only very low bit-rates because of the transport and computational overhead associated with signature transmission and verification.
  * An asymmetric signature of a larger message comprising multiple packets requires reliable receipt of all such packets, something that cannot be guaranteed in a timely manner even for protocols that do provide reliable delivery, and the retransmission of which may anyway exceed the useful lifetime for data formats that can otherwise tolerate some degree of loss.
 
-Aymmetric Manifest-Based Integrity (AMBI) defines a method for receivers or middle boxes to cryptographically authenticate and verify the integrity of a stream of packets by comparing the data packets to a stream of packet "manifests" (described in {{ref-manifest}}) received via an out-of-band communication channel that provides authentication and verifiable integrity.
+Aysmmetric Manifest-Based Integrity (AMBI) defines a method for receivers or middle boxes to cryptographically authenticate and verify the integrity of a stream of packets by comparing the data packets to a stream of packet "manifests" (described in {{ref-manifest}}) received via an out-of-band communication channel that provides authentication and verifiable integrity.
 
 Each manifest contains a message digest (described in {{ref-digests}}) for each packet in a sequence of packets from the data stream, hereafter called a "packet digest".
 The packet digest incorporates a cryptographic hash of the packet contents and some identifying data from the packet, according to a defined digest profile for the data stream.
@@ -445,7 +445,7 @@ Each packet in the data stream increases this value by 1.
 
 It's RECOMMENDED to expire the manifest stream and start a new stream for the data packets before a sequence number wrap is necessary.
 
-Note: for redundancy, especially if using a manifest stream with unreliable transport, successive manifests MAY provide duplicates of the same packet digest with the same packet sequence number, using overapping sets of packet sequence numbers.
+Note: for redundancy, especially if using a manifest stream with unreliable transport, successive manifests MAY provide duplicates of the same packet digest with the same packet sequence number, using overlapping sets of packet sequence numbers.
 When received, these reset the hold timer for the listed packet digests.
 
 #### T bit (TLVs Present)
@@ -638,12 +638,12 @@ TBD: follow the rest of the guidelines: https://tools.ietf.org/html/rfc3552
 
 A multicast receiver subscribes to an (S,G) and if it's a UDP application, listens on a socket with a port number for packets to arrive.
 
-UDP applications sometimes bind to an "unspecified" address ("::" or "0.0.0.0") for a particular UDP port, which will make the appliction receive and process any packet that arrives on said port.
+UDP applications sometimes bind to an "unspecified" address ("::" or "0.0.0.0") for a particular UDP port, which will make the application receive and process any packet that arrives on said port.
 
 Forwarding multicast traffic opens a new practical attack surface against receivers that have bound sockets using the "unspecified" address and were operating behind a firewall and/or NAT.
 Such applications will receive traffic from the internet only after sending an outbound packet, and usually only for return packets with the reversed source and destination port and IP addresses.
 
-Multicast subscription and routing operates at the IP layer, so when a multicst receive application subscribes to a channel, traffic with the IP addresses for that channel will start arriving.
+Multicast subscription and routing operates at the IP layer, so when a multicast receive application subscribes to a channel, traffic with the IP addresses for that channel will start arriving.
 There is no selection for the UDP port at the routing layer that prevents multicast IP traffic from arriving.
 
 When an insecure application with a vulnerability is listening to a UDP port on an unspecified address, it will receive multicast packets arriving at the device and with that destination UDP port.
