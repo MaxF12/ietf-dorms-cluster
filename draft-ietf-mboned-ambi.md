@@ -118,10 +118,10 @@ The "Introduction" sections of the documents describing TESLA {{RFC4082}}, and T
 
 Asymmetric Manifest-Based Integrity (AMBI) defines a method for receivers or middle boxes to cryptographically authenticate and verify the integrity of a stream of packets by comparing the data packets to a stream of packet "manifests" (described in {{ref-manifest}}) received via an out-of-band communication channel that provides authentication and verifiable integrity.
 
-Each manifest contains a hash value for each packet in a sequence of packets from the data stream, hereafter called a "packet digest".
-The packet digest incorporates a cryptographic hash of the packet contents, computed according to a defined digest profile (described in {{ref-profile}}) for the data stream .
+Each manifest contains a cryptographic hash value for each packet in a sequence of packets from the data stream, hereafter called a "packet digest".
+The packet digest is computed from a pseudo header that includes the package contents as well as a manifest stream identifier. This happens according to a defined digest profile (described in {{ref-profile}}) for the data stream .
 
-Upon receipt of a packet digest inside a manifest conveyed in a secure channel and verification that the packet digest of a received data packet matches, the receiver has proof of the integrity of the contents of the data packet corresponding to that digest.
+Upon receipt of a packet digest inside a manifest conveyed in a secure channel and verification that it matches the hash calculated from a received multicast data packet, the receiver has proof of the integrity of that data packet.
 
 This document defines the "ietf-ambi" YANG {{RFC7950}} model in {{ref-yang}} as an extension of the "ietf-dorms" model defined in {{I-D.draft-ietf-mboned-dorms}}.
 Also defined are new URI schemes for transport of manifests over TLS or DTLS, and a new media type for transport of manifests over HTTPS.
