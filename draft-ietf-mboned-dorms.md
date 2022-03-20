@@ -1,8 +1,8 @@
 ---
 title: Discovery Of Restconf Metadata for Source-specific multicast
 abbrev: DORMS
-docname: draft-ietf-mboned-dorms-02
-date: 2021-07-10
+docname: draft-ietf-mboned-dorms-04
+date: 2022-03-07
 category: std
 
 ipr: trust200902
@@ -45,7 +45,6 @@ normative:
 informative:
   RFC1034:
   RFC1035:
-  RFC2845:
   RFC2931:
   RFC3040:
   RFC3376:
@@ -59,6 +58,7 @@ informative:
   RFC6415:
   RFC7858:
   RFC8484:
+  RFC8945:
   I-D.draft-ietf-mboned-cbacc:
   I-D.draft-ietf-mboned-ambi:
   I-D.draft-ietf-core-comi:
@@ -198,7 +198,7 @@ For example, a client looking for metadata about the channel with a source IP of
                  0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa.
 ~~~ 
 
-Or for an IPv4 (S,G) with a source address of 203.0.113.4 and a group address of 232.1.1.1, the DORMS client would request the SRV record from the in-addr.arpa tree instead:
+Or for an IPv4 (S,G) with a source address of 203.0.113.4, the DORMS client would request the SRV record from the in-addr.arpa tree instead:
 
 ~~~
      _dorms._tcp.4.113.0.203.in-addr.arpa.
@@ -499,22 +499,37 @@ The following registrations are made, per the format in Section 8.1.1 of {{RFC63
 The YANG module specified in this document defines a schema for data that is designed to be accessed via RESTCONF {{RFC8040}}.
 The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement secure transport is TLS {{RFC8446}}.
 
-DORMS servers MUST constrain write access to ensure that unauthorized users cannot edit the data published by the server.
-Unauthorized editing of any data nodes or any extensions to data nodes could result in a denial of service for end users.
+There are a number of data nodes defined in this YANG module that are writable/creatable/deletable (i.e., config true, which is the default). These data nodes may be considered sensitive or vulnerable in some network environments. Write operations (e.g., edit-config) to these data nodes without proper protection can have a negative effect on network operations. These are the subtrees and data nodes and their sensitivity/vulnerability:
+
+Subtrees:
+
+ - /dorms/metadata
+ - /dorms/metadata/sender
+ - /dorms/metadata/sender/group
+ - /dorms/metadata/sender/group/udp-stream
+
+Data nodes:
+
+ - /dorms/metadata/sender/source-address
+ - /dorms/metadata/sender/group/group-address
+ - /dorms/metadata/sender/group/udp-stream/port
+
+These data nodes refer to the characteristics of a stream of data packets being sent on a multicast channel.
+If an unauthorized or incorrect edit is made, receivers would no longer be able to associate the data stream to the correct metadata, resulting in a denial of service for end users that rely on the metadata to properly process the data packets.
+Therefore DORMS servers MUST constrain write access to ensure that unauthorized users cannot edit the data published by the server.
 
 The Network Configuration Access Control Model (NACM) {{RFC8341}} provides the means to restrict access for particular NETCONF or RESTCONF users to a preconfigured subset of all available NETCONF or RESTCONF protocol operations and content.
 DORMS servers MAY use NACM to constrain write accesses.
 
-However, note that scalability considerations described in {{provisioning}} might make the naive use of NACM intractable in many deployments.
+However, note that scalability considerations described in {{provisioning}} might make the naive use of NACM intractable in many deployments, for a broadcast use case.
 So alternative methods to constrain write access to the metadata MAY be used instead of or in addition to NACM.
 For example, some deployments that use a CDN or caching layer of discoverable DORMS servers might uniformly provide read-only access through the caching layer, and might require the trusted writers of configuration to use an alternate method of accessing the underlying database such as connecting directly to the origin, or requiring the use of a non-RESTCONF mechanism for editing the contents of the metadata.
 
-The data nodes defined in this YANG module are writable because some deployments might manage the contents in the database by using normal RESTCONF editing operations with NACM, but in many deployments it's expected that DORMS clients will generally have read-only access.
+The data nodes defined in this YANG module are writable because some deployments might manage the contents in the database by using normal RESTCONF editing operations with NACM, but in typical deployments it's expected that DORMS clients will generally have read-only access.
 For the reasons and requirements described in {{exposure}}, none of the data nodes in the DORMS module or its extensions contain sensitive data.
 
 DORMS servers MAY provide read-only access to clients for publicly available metadata without authenticating the clients.
 That is, under the terms in Section 2.5 of {{RFC8040}} read-only access to publicly available data MAY be treated as unprotected resources.
-However, DORMS servers MUST authenticate clients in order to provide write access.
 
 ## Exposure of Metadata {#exposure}
 
@@ -539,7 +554,7 @@ The secure transport provided by these minimum requirements are relied upon to p
 
  There must be a trust relationship between the end consumer of this resource record and the DNS server.
 This relationship may be end-to-end DNSSEC validation or a secure connection to a trusted DNS server that provides end-to-end safety to prevent record-spoofing of the response from the trusted server.
-The connection to the trusted server can use any secure channel, such as with a TSIG {{RFC2845}} or SIG(0) {{RFC2931}} channel, a secure local channel on the host, DNS over TLS {{RFC7858}}, DNS over HTTPS {{RFC8484}}, or some other mechanism that provides authentication of the RR.
+The connection to the trusted server can use any secure channel, such as with a TSIG {{RFC8945}} or SIG(0) {{RFC2931}} channel, a secure local channel on the host, DNS over TLS {{RFC7858}}, DNS over HTTPS {{RFC8484}}, or some other mechanism that provides authentication of the RR.
 
 If a DORMS client accepts a maliciously crafted SRV record, the client could connect to a server controlled by the attacker, and use metadata provided by them.  The consequences of trusting maliciously crafted metadata could range from attacks against the DORMS client's parser of the metadata (via malicious constructions of the formatting of the data) to arbitrary disruption of the decisions the DORMS client makes as a result of processing validly constructed metadata.
 
