@@ -1,8 +1,8 @@
 ---
 title: Asymmetric Manifest Based Integrity
 abbrev: AMBI
-docname: draft-ietf-mboned-ambi-02
-date: 2021-07-10
+docname: draft-ietf-mboned-ambi-03
+date: 2022-03-07
 category: std
 
 ipr: trust200902
