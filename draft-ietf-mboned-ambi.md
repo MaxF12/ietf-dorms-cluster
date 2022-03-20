@@ -1,8 +1,8 @@
 ---
 title: Asymmetric Manifest Based Integrity
 abbrev: AMBI
-docname: draft-ietf-mboned-ambi-02
-date: 2021-07-10
+docname: draft-ietf-mboned-ambi-03
+date: 2022-03-07
 category: std
 
 ipr: trust200902
@@ -612,7 +612,9 @@ This document adds the following registration to the "ns" subregistry of the "IE
 
 TBD: Register 'application/ambi' according to advice from: <https://www.iana.org/form/media-types>
 
-TBD: check guidelines in <https://tools.ietf.org/html/rfc5226>
+TBD: check guidelines in <https://tools.ietf.org/html/rfc8126>
+
+TBD: comments from Amanda: The first is that the current IANA Considerations RFC is RFC 8126 rather than 5226. The other point, which you may be aware of, is that while https://www.iana.org/form/media-types provides guidance, standards-tree registrations submitted through RFCs shouldn't be submitted through that form and (unlike vendor-tree subtypes and standards-tree subtypes documented in other standards organization specs) won't need to be explicitly approved by the IESG-designated experts. Instead, the advice in RFC 6838 is that media type registrations requested by IETF-stream I-Ds be informally reviewed on the media-types@iana.org mailing list, which the IESG-designated experts participate in.
 
 ## URI Schemes
 
@@ -655,7 +657,7 @@ This mitigation prevents new forwarding of multicast traffic from providing atta
 
 # Acknowledgements
 
-Many thanks to Daniel Franke, Eric Rescorla, Christian Worm Mortensen, Max Franke, and Albert Manfredi for their very helpful comments and suggestions.
+Many thanks to Daniel Franke, Eric Rescorla, Christian Worm Mortensen, Max Franke, Albert Manfredi, and Amanda Baber for their very helpful comments and suggestions.
 
 --- back
 
