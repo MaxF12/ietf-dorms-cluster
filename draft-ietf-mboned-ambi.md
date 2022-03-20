@@ -116,7 +116,7 @@ The "Introduction" sections of the documents describing TESLA {{RFC4082}}, and T
  * Asymmetric per-packet signatures can handle only very low bit-rates because of the transport and computational overhead associated with signature transmission and verification.
  * An asymmetric signature of a larger message comprising multiple packets requires reliable receipt of all such packets, something that cannot be guaranteed in a timely manner even for protocols that do provide reliable delivery, and the retransmission of which may anyway exceed the useful lifetime for data formats that can otherwise tolerate some degree of loss.
 
-Aysmmetric Manifest-Based Integrity (AMBI) defines a method for receivers or middle boxes to cryptographically authenticate and verify the integrity of a stream of packets by comparing the data packets to a stream of packet "manifests" (described in {{ref-manifest}}) received via an out-of-band communication channel that provides authentication and verifiable integrity.
+Asymmetric Manifest-Based Integrity (AMBI) defines a method for receivers or middle boxes to cryptographically authenticate and verify the integrity of a stream of packets by comparing the data packets to a stream of packet "manifests" (described in {{ref-manifest}}) received via an out-of-band communication channel that provides authentication and verifiable integrity.
 
 Each manifest contains a message digest (described in {{ref-digests}}) for each packet in a sequence of packets from the data stream, hereafter called a "packet digest".
 The packet digest incorporates a cryptographic hash of the packet contents and some identifying data from the packet, according to a defined digest profile for the data stream.
@@ -486,6 +486,7 @@ Any unknown values MUST be skipped and ignored by the receiver, using the Length
 The total size of the manifest in octets is exactly equal to:
 
  Size of digests * packet count + 14 if T is 0
+ or
  Size of digests * packet count + 16 + TLV Length if T is 1
 
 The total size of the TLV space is exactly equal to:
