@@ -265,7 +265,6 @@ Note that a manifest contains potentially many packet digests, and its size can 
 By doing so, many packet digests for the multicast data stream can be delivered per packet of the manifest transport.
 The intent is that even with unicast-based manifest transport, multicast-style efficiencies of scale can still be realized with only a relatively small unicast overhead, when manifests use a unicast transport.
 
-
 ## Buffering of Packets and Digests
 
 Using different communication channels for the manifest stream and the data stream introduces a possibility of desynchronization in the timing of the received data between the different channels, so receivers hold data packets and packet digests from the manifest stream in buffers for some duration while awaiting the arrival of their counterparts.
