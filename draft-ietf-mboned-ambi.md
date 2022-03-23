@@ -227,7 +227,7 @@ See also work-in-progress: <https://squarooticus.github.io/draft-krose-multicast
 ## Overview
 
 ### Joining a manifest stream
-Multicast receivers wishing to learn if the multicast stream supports AMBI may use DORMS to discover metadata specific to that stream. If supported, the metadata will include, in accordance with the YANG model (see {{ref-yang}}), the following parameters: 
+Multicast receivers wishing to learn if the multicast stream supports AMBI may use DORMS to discover metadata specific to that stream. If supported, the metadata will include a manifest-stream entry that, in accordance with the YANG model (see {{ref-yang}}), has the following parameters: 
 
 #### ID
 The Manifest ID referenced in a manifest.
