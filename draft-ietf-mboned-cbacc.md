@@ -2,7 +2,7 @@
 title: Circuit Breaker Assisted Congestion Control
 abbrev: CBACC
 docname: draft-ietf-mboned-cbacc-latest
-date: 2022-03-07
+date:
 category: std
 
 ipr: trust200902
