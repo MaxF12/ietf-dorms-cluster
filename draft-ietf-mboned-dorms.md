@@ -1,8 +1,8 @@
 ---
 title: Discovery Of Restconf Metadata for Source-specific multicast
 abbrev: DORMS
-docname: draft-ietf-mboned-dorms-04
-date: 2022-03-07
+docname: draft-ietf-mboned-dorms-latest
+date:
 category: std
 
 ipr: trust200902
@@ -22,6 +22,20 @@ author:
     city: Cambridge, MA 02144
     country: United States of America
     email: jakeholland.net@gmail.com
+ -
+    ins: K. Rose
+    name: Kyle Rose
+    org: Akamai Technologies, Inc.
+    street: 145 Broadway
+    city: Cambridge, MA 02144
+    country: United States of America
+    email: krose@krose.org
+ -
+    ins: M. Franke
+    name: Max Franke
+    org: TU Berlin
+    email: mfranke@inet.tu-berlin.de
+    country: Germany
 
 normative:
   RFC2119:
@@ -156,7 +170,7 @@ This document is in the Github repository at:
 
 https://github.com/GrumpyOldTroll/ietf-dorms-cluster
 
-Readers are welcome to open issues and send pull requests for this document. 
+Readers are welcome to open issues and send pull requests for this document.
 
 Please note that contributions may be merged and substantially edited, and as a reminder, please carefully consider the Note Well before contributing: https://datatracker.ietf.org/submit/note-well/
 
@@ -196,7 +210,7 @@ For example, a client looking for metadata about the channel with a source IP of
 ~~~
      _dorms._tcp.a.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.
                  0.0.0.0.0.0.0.0.8.b.d.0.1.0.0.2.ip6.arpa.
-~~~ 
+~~~
 
 Or for an IPv4 (S,G) with a source address of 203.0.113.4, the DORMS client would request the SRV record from the in-addr.arpa tree instead:
 

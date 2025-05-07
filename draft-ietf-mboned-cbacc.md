@@ -1,7 +1,7 @@
 ---
 title: Circuit Breaker Assisted Congestion Control
 abbrev: CBACC
-docname: draft-ietf-mboned-cbacc-04
+docname: draft-ietf-mboned-cbacc-latest
 date: 2022-03-07
 category: std
 
@@ -22,6 +22,20 @@ author:
     city: Cambridge, MA 02144
     country: United States of America
     email: jakeholland.net@gmail.com
+ -
+    ins: K. Rose
+    name: Kyle Rose
+    org: Akamai Technologies, Inc.
+    street: 145 Broadway
+    city: Cambridge, MA 02144
+    country: United States of America
+    email: krose@krose.org
+ -
+    ins: M. Franke
+    name: Max Franke
+    org: TU Berlin
+    email: mfranke@inet.tu-berlin.de
+    country: Germany
 
 normative:
   RFC2119:
@@ -46,9 +60,9 @@ informative:
   PathChirp:
     title: "pathChirp: Efficient Available Bandwidth Estimation for Network Paths"
     author:
-      - 
+      -
         name: Vinay J. Ribeiro
-      - 
+      -
         name: Rudolf H. Riedi
       -
         name: Richard G. Baraniuk
@@ -200,10 +214,10 @@ This document is in the Github repository at:
 
 https://github.com/GrumpyOldTroll/ietf-dorms-cluster
 
-Readers are welcome to open issues and send pull requests for this document. 
+Readers are welcome to open issues and send pull requests for this document.
 
 Please note that contributions may be merged and substantially edited, and as a reminder, please carefully consider the Note Well before contributing: https://datatracker.ietf.org/submit/note-well/
- 
+
 Substantial discussion of this document should take place on the MBONED working group mailing list (mboned@ietf.org).
 
  * Join: https://www.ietf.org/mailman/listinfo/mboned
