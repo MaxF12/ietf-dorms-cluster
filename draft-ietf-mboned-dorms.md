@@ -519,6 +519,7 @@ Subscription to a multicast channel generally only exposes the IGMP or MLD membe
 However, a RESTCONF connection is a unicast connection, and exposes a different set of information to the operator of the RESTCONF server, including IP address and timing about the requests made.
 Where DORMS access becomes required to succeed a multicast join (for example, as expected in a browser deployment), this can expose new information about end users relative to services based solely on multicast streams.
 The information disclosure occurs by giving the DORMS service operator information about the client's IP and the channels the client queried.
+Additionally, an on-path observer may infer multicast subscription intent by observing client traffic directed to a known DORMS server.
 
 In some deployments it may be possible to use a proxy that aggregates many end users when the aggregate privacy characteristics are needed by end users.
 
