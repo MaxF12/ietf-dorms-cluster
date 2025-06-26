@@ -133,7 +133,7 @@ But a few example use cases are provided below for illustration.
 
 ### Provisioning and Oversubscription Protection
 
-One use case for DORMS is when a network that is capable of forwarding multicast traffic may need to take provisioning actions or make admission control decisions based on the expected bitrate of the traffic in order to prevent oversubscription of constrained devices in the network. 
+One use case for DORMS is when a network that is capable of forwarding multicast traffic may need to take provisioning actions or make admission control decisions based on the expected bitrate of the traffic in order to prevent oversubscription of constrained devices in the network.
 In such a case, the network in question could learn these bitrates from the metadata provided by DORMS.
 {{I-D.draft-ietf-mboned-cbacc}} defines some DORMS extensions to support this use case.
 
@@ -168,17 +168,6 @@ Substantial discussion of this document should take place on the MBONED working 
  * Join: https://www.ietf.org/mailman/listinfo/mboned
  * Search: https://mailarchive.ietf.org/arch/browse/mboned/
 
-### Non-obvious doc choices
-
-Log of odd things that need to be the way they are because of some reason that the author or reviewers may want to know later.
-
- * building the draft without this line produces a warning about no reference to {{RFC6991}} or {{RFC8294}}, but these are imported in the yang model. RFC 8407 requires the normative reference to 8294 (there's an exception for 6991 but I'm not sure why and it doesn't seem forbidden).
-
- * Although it's non-normative, I chose the boundaries in the recommendation for default setting of DNS expiry time in {{ignore}} based on the best practices advice at https://www.varonis.com/blog/dns-ttl/ for "Short" and "Long" times.
-
- * {{yang-considerations}} is intended to be the template from <https://trac.ietf.org/trac/ops/wiki/yang-security-guidelines>, as required by <https://datatracker.ietf.org/doc/html/rfc8407#section-3.7>.  Individual nodes are not listed because blanket statements in that section covere them.
-
- * The 'must' constraint in the group list seems awkward, but seems to work.  Its intent is to require source & group to be either both IPv4 or both IPv6, without mixing & matching.  It requires that either both the group address and its source parent's address must contain a colon or both must NOT contain a colon, where presence of a colon is used to distinguish IPv4 from IPv6.  Maybe there's a better way?
 
 # Discovery and Metdata Retrieval {#disco}
 
@@ -422,7 +411,7 @@ YANG-MODULE ietf-dorms.yang
 The YANG module specified in this document defines a schema for data that is designed to be accessed via RESTCONF {{RFC8040}}.
 The lowest RESTCONF layer is HTTPS, and the mandatory-to-implement secure transport is TLS {{RFC8446}}.
 
-There are a number of data nodes defined in this YANG module that are writable/creatable/deletable (i.e., config true, which is the default). These data nodes may be considered sensitive or vulnerable in some network environments. 
+There are a number of data nodes defined in this YANG module that are writable/creatable/deletable (i.e., config true, which is the default). These data nodes may be considered sensitive or vulnerable in some network environments.
 Write operations (e.g., edit-config) to these data nodes without proper protection can have a negative effect on network operations. These are the subtrees and data nodes and their sensitivity/vulnerability:
 
 Subtrees:
@@ -480,7 +469,7 @@ The secure transport provided by these minimum requirements are relied upon to p
 This relationship may be end-to-end DNSSEC validation or a secure connection to a trusted DNS server that provides end-to-end safety to prevent record-spoofing of the response from the trusted server.
 The connection to the trusted server can use any secure channel, such as with a TSIG {{RFC8945}} or SIG(0) {{RFC2931}} channel, a secure local channel on the host, DNS over TLS {{RFC7858}}, DNS over HTTPS {{RFC8484}}, or some other mechanism that provides authentication of the RR.
 
-If a DORMS client accepts a maliciously crafted SRV record, the client could connect to a server controlled by the attacker, and use metadata provided by them.  
+If a DORMS client accepts a maliciously crafted SRV record, the client could connect to a server controlled by the attacker, and use metadata provided by them.
 The consequences of trusting maliciously crafted metadata could range from attacks against the DORMS client's parser of the metadata (via malicious constructions of the formatting of the data) to arbitrary disruption of the decisions the DORMS client makes as a result of processing validly constructed metadata.
 
 Clients MAY use other secure methods to explicitly associate an (S,G) with a set of DORMS server hostnames, such as a configured mapping or an alternative trusted lookup service.
