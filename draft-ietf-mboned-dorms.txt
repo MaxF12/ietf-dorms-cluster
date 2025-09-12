@@ -707,7 +707,13 @@ Table of Contents
    constrain write access to the metadata MAY be used instead of or in
    addition to NACM.  In such deployments, if NACM is not used,
    equivalent access controls (e.g., gateway ACLs, origin-only write
-   paths) MUST be provided.
+   paths) MUST be provided.  For example, some deployments that use a
+   CDN or caching layer of discoverable DORMS servers might uniformly
+   provide read-only access through the caching layer, and might require
+   the trusted writers of configuration to use an alternate method of
+   accessing the underlying database such as connecting directly to the
+   origin, or requiring the use of a non-RESTCONF mechanism for editing
+   the contents of the metadata.
 
    The data nodes defined in this YANG module are writable because some
    deployments might manage the contents in the database by using normal
