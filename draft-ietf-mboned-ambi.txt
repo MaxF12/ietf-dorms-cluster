@@ -5,9 +5,9 @@
 Mboned                                                        J. Holland
 Internet-Draft                                                   K. Rose
 Intended status: Standards Track               Akamai Technologies, Inc.
-Expires: 17 November 2025                                      M. Franke
+Expires: 16 March 2026                                         M. Franke
                                                                TU Berlin
-                                                             16 May 2025
+                                                       12 September 2025
 
 
                   Asymmetric Manifest Based Integrity
@@ -37,7 +37,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 November 2025.
+   This Internet-Draft will expire on 16 March 2026.
 
 Copyright Notice
 
@@ -931,7 +931,7 @@ Table of Contents
 6.2.  Module
 
    <CODE BEGINS>
-    file ietf-ambi@2025-05-16.yang
+    file ietf-ambi@2025-09-12.yang
    module ietf-ambi {
      yang-version 1.1;
 
@@ -1214,9 +1214,9 @@ Table of Contents
    [I-D.draft-ietf-mboned-dorms]
               Holland, J., Rose, K., and M. Franke, "Discovery Of
               Restconf Metadata for Source-specific multicast", Work in
-              Progress, Internet-Draft, draft-ietf-mboned-dorms-05, 8
-              May 2025, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-mboned-dorms-05>.
+              Progress, Internet-Draft, draft-ietf-mboned-dorms-06, 5
+              July 2025, <https://datatracker.ietf.org/doc/html/draft-
+              ietf-mboned-dorms-06>.
 
    [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
